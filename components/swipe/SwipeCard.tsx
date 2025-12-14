@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import Image from 'next/image';
+import { Heart, X } from 'lucide-react';
 import type { SwipeCreative } from '@/core/models/types';
 
 interface SwipeCardProps {
@@ -11,12 +12,16 @@ interface SwipeCardProps {
 
 export function SwipeCard({ creative, onSwipeLeft, onSwipeRight }: SwipeCardProps) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-25, 25]);
-  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
+  const rotate = useTransform(x, [-200, 200], [-15, 15]);
+  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0.5, 1, 1, 1, 0.5]);
 
   // Overlay colors for feedback
-  const likeOpacity = useTransform(x, [0, 100], [0, 0.7]);
-  const dislikeOpacity = useTransform(x, [-100, 0], [0.7, 0]);
+  const likeOpacity = useTransform(x, [0, 100], [0, 1]);
+  const dislikeOpacity = useTransform(x, [-100, 0], [1, 0]);
+
+  // Background glow based on direction
+  const likeGlow = useTransform(x, [0, 150], [0, 0.6]);
+  const dislikeGlow = useTransform(x, [-150, 0], [0.6, 0]);
 
   const handleDragEnd = (_event: any, info: PanInfo) => {
     const threshold = 100;
@@ -31,17 +36,37 @@ export function SwipeCard({ creative, onSwipeLeft, onSwipeRight }: SwipeCardProp
   };
 
   return (
-    <div className="flex items-center justify-center px-4 py-8 flex-1">
+    <div className="relative flex items-center justify-center px-4 py-8 flex-1">
+      {/* Ambient glow effects */}
       <motion.div
-        className="relative w-full max-w-md touch-none"
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: likeGlow }}
+      >
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-success/30 blur-3xl rounded-full" />
+      </motion.div>
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: dislikeGlow }}
+      >
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-destructive/30 blur-3xl rounded-full" />
+      </motion.div>
+
+      <motion.div
+        className="relative w-full max-w-sm touch-none"
         style={{ x, rotate, opacity }}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.7}
+        dragElastic={0.9}
         onDragEnd={handleDragEnd}
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ cursor: 'grabbing' }}
       >
-        <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl bg-card">
+        {/* Card with enhanced styling */}
+        <motion.div
+          className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden bg-card shadow-premium"
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        >
           {/* Creative Image */}
           <Image
             src={creative.imageUrl}
@@ -54,32 +79,61 @@ export function SwipeCard({ creative, onSwipeLeft, onSwipeRight }: SwipeCardProp
 
           {/* Like Overlay (Green) */}
           <motion.div
-            className="absolute inset-0 bg-success flex items-center justify-center"
+            className="absolute inset-0 bg-gradient-to-br from-success/80 to-success/60 flex items-center justify-center"
             style={{ opacity: likeOpacity }}
           >
-            <div className="text-white text-6xl font-bold rotate-12 border-4 border-white px-8 py-4 rounded-2xl">
-              LIKE
-            </div>
+            <motion.div
+              className="flex flex-col items-center gap-3"
+              initial={{ scale: 0.8, rotate: -12 }}
+              animate={{ scale: 1, rotate: -12 }}
+            >
+              <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
+                <Heart className="w-12 h-12 text-white" fill="white" />
+              </div>
+              <span className="text-white text-3xl font-bold tracking-wider uppercase">
+                Like
+              </span>
+            </motion.div>
           </motion.div>
 
           {/* Dislike Overlay (Red) */}
           <motion.div
-            className="absolute inset-0 bg-destructive flex items-center justify-center"
+            className="absolute inset-0 bg-gradient-to-br from-destructive/80 to-destructive/60 flex items-center justify-center"
             style={{ opacity: dislikeOpacity }}
           >
-            <div className="text-white text-6xl font-bold -rotate-12 border-4 border-white px-8 py-4 rounded-2xl">
-              NOPE
-            </div>
+            <motion.div
+              className="flex flex-col items-center gap-3"
+              initial={{ scale: 0.8, rotate: 12 }}
+              animate={{ scale: 1, rotate: 12 }}
+            >
+              <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
+                <X className="w-12 h-12 text-white" strokeWidth={3} />
+              </div>
+              <span className="text-white text-3xl font-bold tracking-wider uppercase">
+                Nope
+              </span>
+            </motion.div>
           </motion.div>
 
           {/* Info Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
-            <p className="text-white text-sm mb-2 line-clamp-3">{creative.prompt}</p>
-            <p className="text-white/60 text-xs">
-              {creative.width} × {creative.height}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 pt-16">
+            <p className="text-white text-sm mb-2 line-clamp-2 leading-relaxed">
+              {creative.prompt}
             </p>
+            <div className="flex items-center gap-3 text-white/60 text-xs">
+              <span className="px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm">
+                {creative.width} × {creative.height}
+              </span>
+            </div>
           </div>
-        </div>
+
+          {/* Corner gradient accents */}
+          <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-accent/20 to-transparent pointer-events-none" />
+        </motion.div>
+
+        {/* Card shadow */}
+        <div className="absolute -bottom-4 left-4 right-4 h-8 bg-black/20 rounded-full blur-xl -z-10" />
       </motion.div>
     </div>
   );

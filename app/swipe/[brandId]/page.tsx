@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { Header } from '@/components/layout/Header';
@@ -13,9 +13,9 @@ import { useImagePreload } from '@/core/hooks/useImagePreload';
 import { useHaptic } from '@/core/hooks/useHaptic';
 import { useGetBrandCampaignsQuery, useGetCampaignCreativesQuery, useLikeCreativeMutation, useDislikeCreativeMutation } from '@/core/services/api';
 
-export default function SwipePage({ params }: { params: { brandId: string } }) {
+export default function SwipePage({ params }: { params: Promise<{ brandId: string }> }) {
   const router = useRouter();
-  const { brandId } = params;
+  const { brandId } = use(params);
   const { isSignedIn, isLoaded } = useAuth();
   const haptic = useHaptic();
 

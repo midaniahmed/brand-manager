@@ -3,31 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --turbopack",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.32.0",
-    "@reduxjs/toolkit": "^2.6.0",
-    "framer-motion": "^12.12.1",
+    "@clerk/nextjs": "^6.36.2",
+    "@reduxjs/toolkit": "^2.11.1",
+    "framer-motion": "^12.23.26",
     "lucide-react": "^0.561.0",
-    "next": "14.2.32",
+    "next": "16.0.10",
     "next-pwa": "^5.6.0",
-    "next-themes": "^0.3.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-redux": "^9.1.2"
+    "next-themes": "^0.4.6",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.32",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.10",
+    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

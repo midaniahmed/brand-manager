@@ -1,7 +1,14 @@
 import type { Metadata, Viewport } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Inter } from 'next/font/google';
 import { AppProviders } from '@/components/providers/AppProviders';
 import '@/styles/globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: 'NativeAds: Creative Swipe',
@@ -35,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         elements: {
           formButtonPrimary: 'bg-primary hover:bg-primary/90',
-          card: 'shadow-xl',
+          card: 'shadow-xl backdrop-blur-xl',
         },
         layout: {
           socialButtonsPlacement: 'bottom',
@@ -43,8 +50,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
       }}
     >
-      <html lang="en" suppressHydrationWarning>
-        <body className="min-h-screen bg-background safe-area-inset font-sans antialiased">
+      <html lang="en" suppressHydrationWarning className={inter.variable}>
+        <body className={`min-h-screen bg-background safe-area-inset font-sans antialiased ${inter.className}`}>
           <AppProviders>{children}</AppProviders>
         </body>
       </html>
