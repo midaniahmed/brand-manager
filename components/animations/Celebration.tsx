@@ -51,7 +51,7 @@ export function Celebration({ onContinue, reviewedCount }: CelebrationProps) {
   }, []);
 
   return (
-    <div className="relative flex items-center justify-center min-h-[70vh] px-6 overflow-hidden">
+    <div className="relative flex flex-1 items-center justify-center min-h-[70vh] px-6 overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 gradient-mesh opacity-60" />
 
@@ -81,11 +81,7 @@ export function Celebration({ onContinue, reviewedCount }: CelebrationProps) {
       >
         <Sparkles className="w-10 h-10" />
       </motion.div>
-      <motion.div
-        className="absolute bottom-32 left-16 text-success/20"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-      >
+      <motion.div className="absolute bottom-32 left-16 text-success/20" animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}>
         <PartyPopper className="w-8 h-8" />
       </motion.div>
 
@@ -113,7 +109,7 @@ export function Celebration({ onContinue, reviewedCount }: CelebrationProps) {
           }}
         >
           <motion.div
-            className="relative z-10 p-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-2xl"
+            className="relative z-10 p-6 rounded-full bg-linear-to-br from-yellow-400 to-orange-500 shadow-2xl"
             initial={{ rotateY: 0 }}
             animate={{ rotateY: [0, 10, 0, -10, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -129,49 +125,28 @@ export function Celebration({ onContinue, reviewedCount }: CelebrationProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-4xl font-bold mb-4 gradient-text"
+          className="text-4xl font-bold mb-4 bg-linear-to-r from-primary to-success bg-clip-text text-transparent"
         >
           Amazing Work!
         </motion.h2>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="mb-6"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }} className="mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-lg font-semibold text-foreground">
-              {reviewedCount} creatives reviewed
-            </span>
+            <span className="text-lg font-semibold text-foreground">{reviewedCount} creatives reviewed</span>
           </div>
         </motion.div>
 
         {/* Message */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="text-muted-foreground mb-8 leading-relaxed"
-        >
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5 }} className="text-muted-foreground mb-8 leading-relaxed">
           Your feedback is helping train a smarter AI model. <br />
           <span className="text-primary font-medium">Thank you for contributing! 🚀</span>
         </motion.p>
 
         {/* Action Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <Button
-            onClick={onContinue}
-            variant="gradient"
-            size="lg"
-            className="w-full shadow-glow animate-pulse-glow"
-          >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}>
+          <Button onClick={onContinue} variant="gradient" size="lg" className="w-full shadow-glow animate-pulse-glow">
             Choose Another Brand
           </Button>
         </motion.div>

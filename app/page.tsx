@@ -1,19 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { SignIn, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function IndexPage() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -38,6 +34,11 @@ export default function IndexPage() {
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen px-4 py-8 overflow-hidden">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
       {/* Animated gradient mesh background */}
       <div className="absolute inset-0 gradient-mesh opacity-80" />
 
@@ -122,7 +123,7 @@ export default function IndexPage() {
       </motion.div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-background to-transparent pointer-events-none" />
     </div>
   );
 }

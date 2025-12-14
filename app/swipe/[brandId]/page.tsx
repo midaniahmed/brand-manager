@@ -77,8 +77,11 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   // Loading state
   if (!isLoaded || campaignsLoading || creativesLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-primary border-t-transparent" />
+          <div className="absolute inset-0 rounded-full blur-xl bg-primary/30 animate-pulse" />
+        </div>
       </div>
     );
   }
@@ -86,7 +89,7 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   // No campaigns
   if (!campaignId) {
     return (
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Header title="Creative Swipe" showBack />
         <EmptyState
           icon="📋"
@@ -104,7 +107,7 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   // No creatives
   if (totalCreatives === 0 && !isComplete) {
     return (
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Header title="Creative Swipe" showBack />
         <EmptyState
           icon="🎨"
@@ -123,7 +126,7 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   if (isComplete) {
     haptic.success();
     return (
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Header title="Creative Swipe" showBack />
         <Celebration reviewedCount={totalCreatives} onContinue={() => router.push('/brands')} />
       </div>
@@ -135,11 +138,13 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
     <div className="flex flex-col min-h-screen bg-background">
       <Header title="Creative Swipe" showBack />
 
-      <SwipeProgress current={currentIndex} total={totalCreatives} />
+      <div className="flex-1">
+        <SwipeProgress current={currentIndex} total={totalCreatives} />
 
-      <SwipeCard creative={currentCreative} onSwipeLeft={() => handleSwipe('left')} onSwipeRight={() => handleSwipe('right')} />
+        <SwipeCard creative={currentCreative} onSwipeLeft={() => handleSwipe('left')} onSwipeRight={() => handleSwipe('right')} />
 
-      <SwipeActions onDislike={() => handleSwipe('left')} onLike={() => handleSwipe('right')} disabled={isProcessing} />
+        <SwipeActions onDislike={() => handleSwipe('left')} onLike={() => handleSwipe('right')} disabled={isProcessing} />
+      </div>
     </div>
   );
 }

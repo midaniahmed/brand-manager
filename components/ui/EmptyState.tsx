@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 
@@ -14,7 +13,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, message, icon = '📭', action }: EmptyStateProps) {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-6 text-center overflow-hidden">
+    <div className="relative flex flex-col flex-1 items-center justify-center min-h-[60vh] px-6 text-center overflow-hidden">
       {/* Animated background orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
@@ -23,7 +22,7 @@ export function EmptyState({ title, message, icon = '📭', action }: EmptyState
           animate={{
             x: [-100, 50, -100],
             y: [-100, 50, -100],
-            scale: [0.8, 1.2, 0.8]
+            scale: [0.8, 1.2, 0.8],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -33,7 +32,7 @@ export function EmptyState({ title, message, icon = '📭', action }: EmptyState
           animate={{
             x: [100, -50, 100],
             y: [100, -50, 100],
-            scale: [1, 0.8, 1]
+            scale: [1, 0.8, 1],
           }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -49,15 +48,11 @@ export function EmptyState({ title, message, icon = '📭', action }: EmptyState
             type: 'spring',
             stiffness: 200,
             damping: 15,
-            delay: 0.1
+            delay: 0.1,
           }}
           className="relative"
         >
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-7xl mb-6"
-          >
+          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="text-7xl mb-6">
             {icon}
           </motion.div>
           {/* Subtle glow under icon */}
@@ -67,12 +62,7 @@ export function EmptyState({ title, message, icon = '📭', action }: EmptyState
         </motion.div>
 
         {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-2xl font-bold mb-3 text-foreground"
-        >
+        <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="text-2xl font-bold mb-3 text-foreground">
           {title}
         </motion.h2>
 
@@ -88,17 +78,8 @@ export function EmptyState({ title, message, icon = '📭', action }: EmptyState
 
         {/* Action Button */}
         {action && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <Button
-              onClick={action.onClick}
-              variant="gradient"
-              size="lg"
-              className="shadow-glow"
-            >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5 }}>
+            <Button onClick={action.onClick} variant="gradient" size="lg" className="shadow-glow">
               {action.label}
             </Button>
           </motion.div>
