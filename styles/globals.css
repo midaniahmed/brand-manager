@@ -84,7 +84,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
 
@@ -93,7 +95,6 @@
    ============================================ */
 
 @layer utilities {
-
   /* Glassmorphism Effects */
   .glass {
     @apply bg-background/80 backdrop-blur-xl border border-white/10;
@@ -109,17 +110,21 @@
 
   /* Gradient Backgrounds */
   .gradient-primary {
-    background: linear-gradient(135deg,
-        hsl(var(--gradient-start)) 0%,
-        hsl(var(--gradient-mid)) 50%,
-        hsl(var(--gradient-end)) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start)) 0%,
+      hsl(var(--gradient-mid)) 50%,
+      hsl(var(--gradient-end)) 100%
+    );
   }
 
   .gradient-primary-subtle {
-    background: linear-gradient(135deg,
-        hsl(var(--gradient-start) / 0.1) 0%,
-        hsl(var(--gradient-mid) / 0.1) 50%,
-        hsl(var(--gradient-end) / 0.1) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start) / 0.1) 0%,
+      hsl(var(--gradient-mid) / 0.1) 50%,
+      hsl(var(--gradient-end) / 0.1) 100%
+    );
   }
 
   .gradient-mesh {
@@ -134,10 +139,12 @@
   /* Gradient Text */
   .gradient-text {
     @apply bg-clip-text text-transparent;
-    background: linear-gradient(135deg,
-        hsl(var(--gradient-start)) 0%,
-        hsl(var(--gradient-mid)) 50%,
-        hsl(var(--gradient-end)) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start)) 0%,
+      hsl(var(--gradient-mid)) 50%,
+      hsl(var(--gradient-end)) 100%
+    );
   }
 
   /* Glow Effects */
@@ -190,15 +197,17 @@
   }
 
   .gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     padding: 1px;
     border-radius: inherit;
-    background: linear-gradient(135deg,
-        hsl(var(--gradient-start)) 0%,
-        hsl(var(--gradient-mid)) 50%,
-        hsl(var(--gradient-end)) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-start)) 0%,
+      hsl(var(--gradient-mid)) 50%,
+      hsl(var(--gradient-end)) 100%
+    );
     -webkit-mask:
       linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);
@@ -232,10 +241,12 @@
 
   /* Shimmer Effect for Skeletons */
   .shimmer {
-    background: linear-gradient(90deg,
-        hsl(var(--muted)) 0%,
-        hsl(var(--muted-foreground) / 0.1) 50%,
-        hsl(var(--muted)) 100%);
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 100%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
@@ -246,7 +257,6 @@
    ============================================ */
 
 @layer utilities {
-
   /* Fade In Up */
   .animate-fade-in-up {
     animation: fade-in-up 0.5s ease-out forwards;
@@ -288,7 +298,6 @@
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -300,7 +309,6 @@
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     box-shadow:
@@ -342,7 +350,9 @@
 /* Smooth transitions for theme switching */
 @media (prefers-reduced-motion: no-preference) {
   html {
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      color 0.3s ease-in-out;
   }
 }
 

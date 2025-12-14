@@ -4,14 +4,14 @@ import React, { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { Header } from '@/components/layout/Header';
-import { SwipeCard } from '@/components/swipe/SwipeCard';
-import { SwipeActions } from '@/components/swipe/SwipeActions';
-import { SwipeProgress } from '@/components/swipe/SwipeProgress';
+import { ProgressBar } from '@/components/swipe/progress-bar/progress-bar';
+
 import { Celebration } from '@/components/animations/Celebration';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { useImagePreload } from '@/core/hooks/useImagePreload';
 import { useHaptic } from '@/core/hooks/useHaptic';
 import { useGetBrandCampaignsQuery, useGetCampaignCreativesQuery, useLikeCreativeMutation, useDislikeCreativeMutation } from '@/core/services/api';
+import { PickCard } from '@/components/swipe/pick-card/pick-card';
+import { SwipeCreative } from '@/core/models/types';
 
 export default function SwipePage({ params }: { params: Promise<{ brandId: string }> }) {
   const router = useRouter();
@@ -19,8 +19,8 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   const { isSignedIn, isLoaded } = useAuth();
   const haptic = useHaptic();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processedCreatives, setProcessedCreatives] = useState<string[]>([]);
 
   // Fetch campaigns for the brand
   const { data: campaigns, isLoading: campaignsLoading } = useGetBrandCampaignsQuery(brandId as string, { skip: !brandId || !isLoaded || !isSignedIn });
@@ -29,11 +29,12 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   // Fetch creatives for the first campaign
   const { data: allCreatives = [], isLoading: creativesLoading } = useGetCampaignCreativesQuery(campaignId || '', { skip: !campaignId });
 
-  // Filter to only completed creatives
-  const completedCreatives = allCreatives.filter((c) => c.status === 'completed');
+  // Filter to only completed creatives that haven't been processed yet
+  const cardList = allCreatives.filter((c) => c.status === 'completed' && !processedCreatives.includes(c.creativeVariationId));
 
-  // Preload next images
-  useImagePreload(completedCreatives, currentIndex);
+  // Calculate progress
+  const totalCreatives = allCreatives.filter((c) => c.status === 'completed').length;
+  const progress = processedCreatives.length / Math.max(totalCreatives, 1);
 
   // Mutations
   const [likeCreative] = useLikeCreativeMutation();
@@ -46,8 +47,8 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
     }
   }, [isLoaded, isSignedIn, router]);
 
-  const handleSwipe = async (direction: 'left' | 'right') => {
-    if (!currentCreative || isProcessing) return;
+  const handleEvaluate = async (card: SwipeCreative, status: 'good' | 'bad') => {
+    if (isProcessing) return;
 
     setIsProcessing(true);
 
@@ -55,24 +56,22 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
       // Haptic feedback
       haptic.medium();
 
-      if (direction === 'right') {
-        await likeCreative(currentCreative.creativeVariationId).unwrap();
+      if (status === 'good') {
+        await likeCreative(card.creativeVariationId).unwrap();
       } else {
-        await dislikeCreative(currentCreative.creativeVariationId).unwrap();
+        await dislikeCreative(card.creativeVariationId).unwrap();
       }
 
-      // Move to next creative
-      setCurrentIndex((prev) => prev + 1);
+      // Add to processed list
+      setProcessedCreatives((prev) => [...prev, card.creativeVariationId]);
     } catch (error) {
-      console.error('Swipe action failed:', error);
+      console.error('Evaluation failed:', error);
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const currentCreative = completedCreatives[currentIndex];
-  const totalCreatives = completedCreatives.length;
-  const isComplete = currentIndex >= totalCreatives;
+  const isComplete = cardList.length === 0;
 
   // Loading state
   if (!isLoaded || campaignsLoading || creativesLoading) {
@@ -105,7 +104,7 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   }
 
   // No creatives
-  if (totalCreatives === 0 && !isComplete) {
+  if (totalCreatives === 0) {
     return (
       <div className="flex flex-col min-h-screen">
         <Header title="Creative Swipe" showBack />
@@ -123,12 +122,12 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
   }
 
   // Celebration - All done!
-  if (isComplete) {
+  if (isComplete && processedCreatives.length > 0) {
     haptic.success();
     return (
       <div className="flex flex-col min-h-screen">
         <Header title="Creative Swipe" showBack />
-        <Celebration reviewedCount={totalCreatives} onContinue={() => router.push('/brands')} />
+        <Celebration reviewedCount={processedCreatives.length} onContinue={() => router.push('/brands')} />
       </div>
     );
   }
@@ -138,12 +137,10 @@ export default function SwipePage({ params }: { params: Promise<{ brandId: strin
     <div className="flex flex-col min-h-screen bg-background">
       <Header title="Creative Swipe" showBack />
 
-      <div className="flex-1">
-        <SwipeProgress current={currentIndex} total={totalCreatives} />
+      <div className="relative flex flex-col flex-1">
+        <ProgressBar progress={progress} />
 
-        <SwipeCard creative={currentCreative} onSwipeLeft={() => handleSwipe('left')} onSwipeRight={() => handleSwipe('right')} />
-
-        <SwipeActions onDislike={() => handleSwipe('left')} onLike={() => handleSwipe('right')} disabled={isProcessing} />
+        <PickCard cardList={cardList} onEvaluate={handleEvaluate} />
       </div>
     </div>
   );

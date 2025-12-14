@@ -38,16 +38,10 @@ export function SwipeCard({ creative, onSwipeLeft, onSwipeRight }: SwipeCardProp
   return (
     <div className="relative flex items-center justify-center px-4 py-8 flex-1">
       {/* Ambient glow effects */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: likeGlow }}
-      >
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ opacity: likeGlow }}>
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-success/30 blur-3xl rounded-full" />
       </motion.div>
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: dislikeGlow }}
-      >
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ opacity: dislikeGlow }}>
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-destructive/30 blur-3xl rounded-full" />
       </motion.div>
 
@@ -68,58 +62,31 @@ export function SwipeCard({ creative, onSwipeLeft, onSwipeRight }: SwipeCardProp
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
           {/* Creative Image */}
-          <Image
-            src={creative.imageUrl}
-            alt="Creative"
-            fill
-            className="object-contain"
-            priority
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+          <Image src={creative.imageUrl} alt="Creative" fill className="object-contain" priority sizes="(max-width: 768px) 100vw, 50vw" />
 
           {/* Like Overlay (Green) */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-success/80 to-success/60 flex items-center justify-center"
-            style={{ opacity: likeOpacity }}
-          >
-            <motion.div
-              className="flex flex-col items-center gap-3"
-              initial={{ scale: 0.8, rotate: -12 }}
-              animate={{ scale: 1, rotate: -12 }}
-            >
+          <motion.div className="absolute inset-0 bg-gradient-to-br from-success/80 to-success/60 flex items-center justify-center" style={{ opacity: likeOpacity }}>
+            <motion.div className="flex flex-col items-center gap-3" initial={{ scale: 0.8, rotate: -12 }} animate={{ scale: 1, rotate: -12 }}>
               <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
                 <Heart className="w-12 h-12 text-white" fill="white" />
               </div>
-              <span className="text-white text-3xl font-bold tracking-wider uppercase">
-                Like
-              </span>
+              <span className="text-white text-3xl font-bold tracking-wider uppercase">Like</span>
             </motion.div>
           </motion.div>
 
           {/* Dislike Overlay (Red) */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-destructive/80 to-destructive/60 flex items-center justify-center"
-            style={{ opacity: dislikeOpacity }}
-          >
-            <motion.div
-              className="flex flex-col items-center gap-3"
-              initial={{ scale: 0.8, rotate: 12 }}
-              animate={{ scale: 1, rotate: 12 }}
-            >
+          <motion.div className="absolute inset-0 bg-gradient-to-br from-destructive/80 to-destructive/60 flex items-center justify-center" style={{ opacity: dislikeOpacity }}>
+            <motion.div className="flex flex-col items-center gap-3" initial={{ scale: 0.8, rotate: 12 }} animate={{ scale: 1, rotate: 12 }}>
               <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
                 <X className="w-12 h-12 text-white" strokeWidth={3} />
               </div>
-              <span className="text-white text-3xl font-bold tracking-wider uppercase">
-                Nope
-              </span>
+              <span className="text-white text-3xl font-bold tracking-wider uppercase">Nope</span>
             </motion.div>
           </motion.div>
 
           {/* Info Overlay */}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 pt-16">
-            <p className="text-white text-sm mb-2 line-clamp-2 leading-relaxed">
-              {creative.prompt}
-            </p>
+            <p className="text-white text-sm mb-2 line-clamp-2 leading-relaxed">{creative.prompt}</p>
             <div className="flex items-center gap-3 text-white/60 text-xs">
               <span className="px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm">
                 {creative.width} × {creative.height}
